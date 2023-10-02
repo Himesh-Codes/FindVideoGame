@@ -4,11 +4,11 @@ Sample react project for study purpose.
 
 ## Useful links
 
-- https://www.youtube.com/watch?v=SqcY0GlETPk&t=1s
 - https://react.dev/learn
 - https://react.dev/learn/describing-the-ui
 - https://roadmap.sh/react
 - https://www.youtube.com/watch?v=FJDVKeh7RJI&t=10s
+- https://www.youtube.com/watch?v=SqcY0GlETPk&t=1s
 
 ## Dev env setup
 
@@ -37,10 +37,10 @@ Sample react project for study purpose.
 - node_modules: all third party libraries are installed.
 - public : all public assets exists.
 - src: src file
-  - main.tsx: entry point for app.
+  - main.tsx: entry point for app, the component specified <React.StrictMode></React.StrictMode> check the potential problems. `ReactDOM` libary use in web app and in mobile the `ReactNative` library.
   - App.tsx: current root component on creation.
   - .eslintrc.cjs : Eslint configs
-- index.html: entry point for our app defined (usually main.tsx)
+- index.html: entry point for our app defined (usually main.tsx), div with id "root" is container of app.
 - package.json: infomation about dependency, build, project etc..
 - tsconfig.json: typescript config, instruction on how to compile to js (can be auto construct with cmd in normal projects)
 - vite.config.json: vite config files
@@ -54,6 +54,8 @@ Sample react project for study purpose.
 - Components helps to create reusable, modular codes.
 - Treat each boxes as components, and each subboxes in view as it's child components.
 
+![Components](doc-images/component-stack.png)
+
 ## JSX
 
     - We use JSX(Javascript XML), as the component render syntax. That is whatever returned in the component.
@@ -62,4 +64,22 @@ Sample react project for study purpose.
     - JSX is very stricter tahn normal html, the return of component can't return multiple elements it should contained in a <div></div> or a wrapper <></>.
     - And every tag should closed even self closed (refer Message.tsx or App.tsx).
 
-![Components](doc-images/component-stack.png)
+### JSX with curly braces
+
+    - It is possible to pass any JS expressions in curly braces {}, that is a piece of code that returns value, eg: variable, function etc.
+
+### Conditional Rendering
+
+    - We can use if/else, ternary operator (? :) and logical AND ( && ).
+
+## How React Working & Vite auto adapt the changes
+
+- Auto render changes by monitoring the comonents with the hot module replacement (hmr).
+
+  2:20:11 AM [vite] hmr update /src/App.tsx (x4)
+
+  2:25:23 AM [vite] hmr update /src/App.tsx (x5)
+
+- React build virtual DOM that is an in memory representation of the components and properties (like a tree). The react identify the node updated and check the changes and update DOM with library called React DOM (check on dependencies "react" and "react-dom").
+
+![Components](doc-images/virtualDOM.png)
