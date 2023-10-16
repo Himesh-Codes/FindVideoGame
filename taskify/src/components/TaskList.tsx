@@ -1,7 +1,6 @@
-import { useContext } from "react";
 import "../App.css";
 import { Task, TaskListProp } from "../interfaces/task";
-import { ApplicationTaskContext, useTaskContext } from "./context/ApplicationContext";
+import {useTaskContext } from "./context/ApplicationContext";
 
 export default function TaskList(tasksList: TaskListProp) : React.JSX.Element{
     // custom hook for check the context
