@@ -20,7 +20,8 @@
 }
 
 .inputField:focus{
-    box-shadow: 0 0 10px 1000px rgba(0, 0, 0, 0);
+    /* for make background darker on focus */
+    box-shadow: 0 0 10px 1000px #06488f88;
     outline: none;
 }
 
@@ -40,12 +41,15 @@
     transition: 0.2s all;
     box-shadow: 0 0 10px black;
     text-align: center;
+    scale: 0.75;
 }
 .addTaskBtn:hover{
     background-color: rgb(18, 111, 193);
+    scale: 1;
 }
 
 .addTaskBtn:active{
     transform: scale(0.8);
     box-shadow: 0 0 5px black;
+    scale: 1;
 }

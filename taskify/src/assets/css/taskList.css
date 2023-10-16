@@ -1,0 +1,6 @@
+.taskList{
+    display: flex;
+    justify-content: space-evenly;
+    width: 75vw;
+    flex-wrap: wrap;
+}

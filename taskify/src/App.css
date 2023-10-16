@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
 
+/* Using import to reduce CSS file load in browser, by including one CSS file in another, and use this css file reference in all components */
+@import url('./assets/css/field.css');
+@import url('./assets/css/taskList.css');
+
 .heading{
   font-family: 'Neucha', cursive;
   text-transform: uppercase;
@@ -12,7 +16,7 @@
 
 .App{
   width: 100vw;
-  height: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;

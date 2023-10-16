@@ -90,6 +90,7 @@ create, delete, update tasks
 ### State (useState Hook)
 
 - State is a component's memory.
+- You can read state at any time. However, each render has its own snapshot of state which does not change.
 - The useState Hook provides those two things:
 
   A state variable to retain the data between renders.
@@ -97,10 +98,24 @@ create, delete, update tasks
 
 - State will remember something on component's memory, even after a DOM refresh.
 
+### useState with Array
+
+- We can't directly append array data, https://react.dev/learn/updating-arrays-in-state.
+- Same applicable for removing, update, replace array items.
+- Like with objects, you should treat arrays in React state as read-only. This means that you shouldn’t reassign items inside an array like arr[0] = 'bird', and you also shouldn’t use methods that mutate the array, such as push() and pop().
+
 ### Passing Props to a Component
 
 - React components use props to communicate with each other. Every parent component can pass some information to its child components by giving them props.
 - We can pass any JS values in props to react the child.
+
+### Spread Operator (...) usage in passing props
+
+- It is very useful to create the ts constant variable with the props data need to pass in components.
+- Reference `App.tsx` file.
+
+      let inputProps: TaskState = {task: task, setTask: setTask, addTasks: addTasks};
+      <InputField {...inputProps}/>
 
 ### Forwarding props with the JSX spread syntax
 
@@ -115,10 +130,11 @@ create, delete, update tasks
 - To add an event handler, you will first define a function and then pass it as a prop to the appropriate JSX tag.
 - Get realtime data from child, eg: Input child give data to parent state variable,
 
-  `<input type="text" placeholder="Enter the task" value={inputProps.task} onChange={(event)=> InputOnchange(event, inputProps.setTask)} className="inputField"/>`
+      <input type="text" placeholder="Enter the task" value={inputProps.task} onChange={(event)=> InputOnchange(event, inputProps.setTask)} className="inputField"/>
 
-  `function InputOnchange(event: React.ChangeEvent<HTMLInputElement>, setTask: React.Dispatch<React.SetStateAction<string>>){
-setTask(event.target.value)}`
+      function InputOnchange(event: React.ChangeEvent<HTMLInputElement>, setTask: React.Dispatch<React.SetStateAction<string>>){
+
+      setTask(event.target.value)}
 
 ### Event propagation (event bubbling)
 
@@ -130,3 +146,84 @@ setTask(event.target.value)}`
 - This is usually useful in Form element etc.. Ref: https://react.dev/learn/responding-to-events#preventing-default-behavior
 - In `InputField.tsx` file we implemented the onSumbit handler, by passing the event reference on callback function.
 - We thus prevent the page refresh.
+
+## Referencing Values with Refs (useRef Hook)
+
+- You can add a ref to your component by importing the useRef Hook, will act as a state permanently holded for that component. (https://react.dev/learn/referencing-values-with-refs)
+- Doesn’t trigger re-render when you change it.
+- You can access the current value of that ref through the ref.current property. This value is intentionally mutable, meaning you can both read and write to it. It’s like a secret pocket of your component that React doesn’t track.
+
+      const inputFieldActive = useRef<HTMLInputElement>(null);
+
+      <form className="addTask" onSubmit={(event)=> HandleSubmit(inputProps, event, inputFieldActive)}>
+        <input ref={inputFieldActive}/>
+
+      inputFieldActive.current?.blur();
+
+      Since the `ref` is an HTMLInputElement, we have access to properties on DOM attributes (https://react.dev/learn/manipulating-the-dom-with-refs).
+
+## Rendering Lists (state Lists)
+
+- Lists can be rendered using js default utility functions `map() or filter()`. (https://react.dev/learn/rendering-lists)
+- Rendered in a elements with data in curly bracket `{}`. (`<li>{task.taskName}</li>`)
+- Reference `TaskList.tsx`.
+
+        const tasksListDom = tasksList.tasks.map(task => <li>{task.taskName}</li>);
+
+  CONSOLE WARNING: `Warning: Each child in a list should have a unique “key” prop.`
+
+  You need to give each array item a `key` — a string or a number that uniquely identifies it among other items in that array
+
+  Keys tell React which array item each component corresponds to, so that it can match them up later. This becomes important if your array items can move (e.g. due to sorting), get inserted, or get deleted. A well-chosen key helps React infer what exactly has happened, and make the correct updates to the DOM tree.
+
+      <li key={person.id}>...</li>
+
+## Passing Data Deeply with Context (useContext)
+
+- Context are meant to store any kind of data, which can be accessible by any of the components without passing as `props`, no matter in which position they are in the tree.
+- This eliminates the passing of pop drilling (long chain of props passing through component tree).
+- It is a common sharing state can be accessible by any components in application, Global data for entire application.
+
+https://www.youtube.com/watch?v=HYKDUF8X3qI
+
+Here in the application we have implemented the tasks state as context.
+Steps:
+
+- Created a context for tasks and the wrapped the context with all other components. Reference `ApplicationContext.ts`.
+
+      export const ApplicationTaskContext = createContext<Task[] | undefined>(undefined);
+
+- We usually initialize context with `undefined | null`, since we are assigning value after the application initialize.
+- Wrap the components inside a context.
+
+      <ApplicationTaskContext.Provider value={tasks}>
+
+      and we pass a value to initialize
+
+- We can use the context in any components without passing it in props. Reference- `TaskList.tsx`.
+
+      const tasks = useContext(ApplicationTaskContext);
+
+- Alternative to check the context have value or not, since context have `undefined | null` intial value, with typescript conditions like below.
+
+      if (tasks) {
+      tasksListDom = tasks.map(task => <li key={task.id}>{task.taskName}</li>)
+      }
+
+  We can create a `Custom Hook` that handles this.
+
+## Custom Hook
+
+- React supports for creating custom hooks for our own usecase.
+- Here we use it for check the context have value or not. Reference - `ApplicationContext.tsx->useTaskContext()`.
+- As a best practice we will throw error when the context is undefined (here it is task context). Else we return the context data, thus we validate and use the context using custom hooks.
+
+      //custom hook for context data validation
+      export function useTaskContext(){
+      const tasks: Task[] | undefined = useContext(ApplicationTaskContext);
+      if(tasks === undefined){
+      throw new Error("UseTaskContext need to be used with initiliaze a value in context wrapper provider.");
+      }
+
+      return tasks;
+      }
