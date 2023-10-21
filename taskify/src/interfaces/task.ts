@@ -13,6 +13,6 @@ export interface Task {
 }
 
 export interface TaskListProp{
-    tasks?: Task[];
+    tasks: Task[];
     pushStacks: React.Dispatch<React.SetStateAction<Task[]>>;
 }

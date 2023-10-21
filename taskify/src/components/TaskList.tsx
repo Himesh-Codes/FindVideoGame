@@ -1,11 +1,13 @@
 import "../App.css";
-import { Task, TaskListProp } from "../interfaces/task";
-import {useTaskContext } from "./context/ApplicationContext";
+import { TaskListProp } from "../interfaces/task";
+import TaskCard from "./TaskCard";
+import { useTaskContext } from "./context/ApplicationContext";
 
-export default function TaskList(tasksList: TaskListProp) : React.JSX.Element{
-    // custom hook for check the context
-    const tasks: Task[] = useTaskContext();
-    const tasksListDom: JSX.Element[] = tasks.map(task => <li key={task.id}>{task.taskName}</li>);
+export default function TaskList() : React.JSX.Element{
+   // custom hook for check the context, here we added tasklist in context level
+    const taskList: TaskListProp = useTaskContext();
+
+    const tasksListDom: JSX.Element[] = taskList.tasks.map(task => <TaskCard  key={task.id} {...task}/>);
 
     return(
         <ul className="taskList">

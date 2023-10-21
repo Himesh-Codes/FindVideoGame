@@ -98,6 +98,22 @@ create, delete, update tasks
 
 - State will remember something on component's memory, even after a DOM refresh.
 
+- Our application refresh everytime since the parent component have `task` & `tasks` state. It updates on every entry in input field and every add of tasks.
+
+            const [task, setTask] = useState<string>("");
+            const [tasks, pushStacks] = useState<Task[]>([]);
+
+             const addTasks = (event: React.FormEvent) => {
+                  // prevent the page refresh
+                  event.preventDefault();
+                  if (task) {
+                        recentTaskUid = `${Date.now().toString()}-${task}`;
+                        pushStacks([...tasks, {id: `${recentTaskUid}`,taskName:task}]);
+                        // empty the input after add
+                        setTask("");
+                  }
+                  };
+
 ### useState with Array
 
 - We can't directly append array data, https://react.dev/learn/updating-arrays-in-state.
@@ -227,3 +243,91 @@ Steps:
 
       return tasks;
       }
+
+## Effect Hook (useEffect)
+
+- Used to perform the side effect.
+- Side effect are result of the state changing. When application goes with one state to other it cause a side effect and this can be controlled using the `useEffect`.
+- The use is simply as an event listener of states in react application.
+- The useEffect have 3 params
+
+      useEffect(()=>{
+        // The code that runs on that effect
+
+        // optional return function
+      }, []) // The dependency array optional, in which trigger statement added
+
+- Dependency array is optional, if not provided the useEffect will not run the code.
+- But even if dependency array is not provided the useEffect with run the code atleast one time, on mount.
+- Dependency array can hold a variable
+
+We used useEffect here to identify new taskCard with useRef on mount and remove that on data changes, with help of useState (that changes on second render), since the second useRef only works on mount time of component, like constructor of object.
+
+            // custom hook usage for edit and delete
+            const taskList: TaskListProp = useTaskContext();
+            // this will set true since the useEffect constructor works on the component mounts to DOM
+            const [isNewTask, setBackNewTask] = useState<boolean>(true);
+
+            useEffect(()=>{
+                  // The code that runs on that effect
+                  if (isNewTask !== false) {
+                        setBackNewTask(false);
+                  }
+                  // optional return function
+            }, [taskList]); // The dependency array optional, in which trigger statement added
+
+            useEffect(()=>{
+                  setBackNewTask(true);
+                  // optional return function
+            }, []);
+
+#### Usecases
+
+- Synchronizing with Effects: useEffect run the code in every render
+- Event handlers - Run code based on render dependency
+
+            useEffect(() => {
+            // This runs after every render since no dependecy defined
+            });
+
+            useEffect(() => {
+            // This runs only on mount (when the component appears)
+            }, []);
+
+            useEffect(() => {
+            // This runs on mount *and also* if either a or b have changed since the last render
+            }, [a, b]);
+
+- Clean up (Destructor) : When a dependency change, before the value is changed, since useEffect get destroyed on every change and do the logic in cleanup `return`. This will help to unsubscribe the things, like clear a timeout, clearInterval, or an event listener etc..
+
+            useEffect(() => {
+            // This runs on mount *and also* if either a or b have changed since the last render
+            console.log(a);
+            return()=>{
+                  console.log("I am cleaned-up");
+            }
+            }, [a]);
+
+- Component mount/unmount listener: If no dependency is added with empty array, it works on component mount (Constructor) and component unmount.
+
+            useEffect(() => {
+            // This runs on mount *and also* if either a or b have changed since the last render
+            console.log(a);
+            return()=>{
+                  console.log("I am cleaned-up");
+            }
+            }, []);
+
+## React Icons
+
+- We use the react icons for the app icons.
+- https://react-icons.github.io/react-icons/
+- To use : npm install react-icons --save
+
+      import { FaBeer } from 'react-icons/fa';
+
+- In our case in `TaskCard.tsx`
+
+      import { GrEdit } from 'react-icons/gr';
+
+      And use: <GrEdit />

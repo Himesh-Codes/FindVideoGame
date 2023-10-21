@@ -3,6 +3,7 @@
 /* Using import to reduce CSS file load in browser, by including one CSS file in another, and use this css file reference in all components */
 @import url('./assets/css/field.css');
 @import url('./assets/css/taskList.css');
+@import url('./assets/css/taskCard.css');
 
 .heading{
   font-family: 'Neucha', cursive;

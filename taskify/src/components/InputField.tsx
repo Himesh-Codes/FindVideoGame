@@ -8,7 +8,7 @@ export default function InputField(inputProps: TaskState): React.JSX.Element{
     return(
         <div className="formContainer">
             <form className="addTask" onSubmit={(event)=> HandleSubmit(inputProps, event, inputFieldActive)}>
-                <input ref={inputFieldActive} type="text" placeholder="Enter the task" value={inputProps.task} onChange={(event)=> InputOnchange(event, inputProps.setTask)} className="inputField"/>
+                <input ref={inputFieldActive} type="text" placeholder="Enter the task" value={inputProps.task} onChange={(event)=> inputProps.setTask(event.target.value)} className="inputField"/>
                 <button className="addTaskBtn" type="submit">ADD</button>
             </form>
         </div>
@@ -18,8 +18,4 @@ export default function InputField(inputProps: TaskState): React.JSX.Element{
 function HandleSubmit(inputProps: TaskState, event: React.FormEvent, inputFieldActive: React.RefObject<HTMLInputElement>){
     inputProps.addTasks(event);
     inputFieldActive.current?.blur();
-}
-
-function InputOnchange(event: React.ChangeEvent<HTMLInputElement>, setTask: React.Dispatch<React.SetStateAction<string>>){
-    setTask(event.target.value)
 }

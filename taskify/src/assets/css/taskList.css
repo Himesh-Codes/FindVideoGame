@@ -4,3 +4,9 @@
     width: 75vw;
     flex-wrap: wrap;
 }
+
+@media (max-width: 800px) {
+    .taskList {
+        padding: 0px 5px;
+    }
+}
