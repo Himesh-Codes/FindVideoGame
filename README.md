@@ -35,6 +35,21 @@ create, delete, update tasks
   npm install / npm i
   npm run dev (to run local server)
 
+### Scripts
+
+- We can add the basic script, for `Vite` based react app.
+
+           "scripts": {
+                  "dev": "vite",
+                  "start": "vite",
+                  "build": "tsc && vite build",
+                  "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+                  "preview": "vite preview"
+            }
+
+- Custom scripts we can add, like in above I added `start`.
+- Inorder to run script we can do command: `npm run <script item>`.
+
 ## Project structure
 
 - node_modules: all third party libraries are installed.
@@ -261,7 +276,7 @@ Steps:
 - But even if dependency array is not provided the useEffect with run the code atleast one time, on mount.
 - Dependency array can hold a variable
 
-We used useEffect here to identify new taskCard with useRef on mount and remove that on data changes, with help of useState (that changes on second render), since the second useRef only works on mount time of component, like constructor of object.
+We used useEffect here to identify new taskCard with useEffect on mount and remove that on data changes, with help of useState (that changes on second render), since the second useRef only works on mount time of component, like constructor of object.
 
             // custom hook usage for edit and delete
             const taskList: TaskListProp = useTaskContext();
@@ -318,6 +333,10 @@ We used useEffect here to identify new taskCard with useRef on mount and remove 
             }
             }, []);
 
+## Reducer Functionality (useReducer)
+
+-
+
 ## React Icons
 
 - We use the react icons for the app icons.
@@ -331,3 +350,146 @@ We used useEffect here to identify new taskCard with useRef on mount and remove 
       import { GrEdit } from 'react-icons/gr';
 
       And use: <GrEdit />
+
+# React Testing (Jest + React Testing Library)
+
+We use Jest (framework) with React testing library default install with `create react app`.
+
+- https://testing-library.com/docs/react-testing-library/intro
+- https://jestjs.io/docs/tutorial-react
+
+Frontend test allows us to do the manual testing automation on expected behaviour.
+The testes are divided into `unit test` (functional level test), `integration test` (combined functional tests/unit tests), `end to end test` (the user level tests, with infact how the user use application in different usecases)
+
+### Advantages
+
+- Allow us to catch bugs easliy (when introduce new feature it may break existing functionality, so if we have test cases it would be easily catchable)
+- Increase confidence of application, since all testcases are defined.
+- Speed ups the QA times (the every basic features can be tested automatically).
+- Tests can be serve as documentation, since all features are testcases we could understand the application better.
+
+## Unit Testing
+
+- Test the functional level expectations.
+- Rather than test each functions, writing the test for each features is `recommended in big applications`.
+- This test will emphasis on each component based feature isolated testing.
+
+### Jest + React Testing Library Unit test (In typescript project)
+
+https://www.youtube.com/watch?v=T2sv8jXoP4s&list=PLC3y8-rFHvwirqe1KHFCHJ0RqNuN61SJd
+
+- https://babeljs.io/docs/
+- https://jestjs.io/docs/getting-started
+
+#### Install Dependencies:
+
+- First, make sure you have the necessary dependencies installed. You will need:
+
+- Jest: A testing framework for JavaScript and TypeScript.
+- ts-jest: A TypeScript preprocessor for Jest.
+- babel-jest: To transform your code using Babel for testing.
+- @testing-library/react: To test React components.
+- @babel/preset-env: Babel preset for environment support.
+- You can install these dependencies using npm
+
+            npm install --save-dev jest jest-environment-jsdom @testing-library/jest-dom @types/jest ts-jest babel-jest @testing-library/react @babel/preset-env @babel/preset-typescript
+
+#### Configure Babel:
+
+- Create a `.babelrc` file in your project's root directory to configure Babel:
+
+           {
+                  "presets": [
+                  ["@babel/preset-env", { "targets": { "node": "current" } }],
+                  "@babel/preset-typescript"
+                  ]
+            }
+
+#### Configure test script
+
+- Add the following section to your package.json:
+
+            {
+                  "scripts": {
+                        "test": "jest"
+                  }
+            }
+
+#### Jest Configuration:
+
+- Create a `jest.config.cjs` file in your project's root directory to configure Jest:
+
+            module.exports = {
+                  preset: "ts-jest",
+                  testEnvironment: "jest-environment-jsdom",
+                  transform: {
+                  "\\.(js|jsx|ts|tsx)$": "babel-jest"
+                  },
+                  moduleDirectories: ["node_modules", "src"],
+                  setupFilesAfterEnv: ["@testing-library/jest-dom"],
+                  moduleNameMapper: {
+                  "\\.(css|less|scss)$": "identity-obj-proxy",
+                  },
+            };
+
+- Run command for css filter config
+
+            npm install identity-obj-proxy --save-dev
+
+- Jest configuration file is being treated as an ES module because your project is configured as an ES module using the "type": "module" setting in your package.json.
+- To resolve this issue, Change Your Jest Configuration File Extension
+- Rename your `jest.config.js` file to `jest.config.cjs`. This new extension (cjs) is recognized as a CommonJS module, and Jest should be able to parse it correctly.
+
+#### Create Tests:
+
+- Create your test files with a .test.tsx or .test.ts extension.
+- For example, you might have a file named MyComponent.test.tsx:
+
+            import React from "react";
+            import { render, screen } from "@testing-library/react";
+            import MyComponent from "../MyComponent"; // import your React library component
+
+            test("it renders correctly", () => {
+                  render(<MyComponent />);
+                  const element = screen.getByText("Hello, World!");
+                  expect(element).toBeInTheDocument();
+            });
+
+#### Run test
+
+- Run the test by command `npm run test`
+
+### How it works
+
+- When we run command `npm run test`, the react search and find all test files in project directory with `*.test.tsx` or `*.test.js` file name format.
+
+- React Testing Lib Tutorial - https://www.robinwieruch.de/react-testing-library/
+- Jest API - https://jestjs.io/docs/api
+
+Test Workflow is as follows
+
+- Render a component we need to test
+- Find elements we need to interact with
+- Interact with those elements
+- Assert the results are as expected
+
+- Snapshot testing - https://jestjs.io/docs/snapshot-testing
+
+            import { render, screen } from "@testing-library/react";
+            import App from "../App";
+
+            test('initial screen check list', () => { //description of test
+            render(<App/>); // render the test component
+            const header = screen.getByText(/Taskify/i); // find the elements
+            expect(header).toBeInTheDocument(); //jest-dom based assert the result
+            });
+
+## Integration Testing
+
+- Interaction with multiple components, or different unit tests in a combined workflow, this is tested with Integration test.
+- Like in react let's take an example that add the tasks, that effectively put tasks in the tasklist section component. We test this interaction with components is integration test.
+
+## E2E Testing
+
+- We test the each and every process in user perspective, workflow of an application feature. Like in react app eg: if a user login the username/password entry. success or failure, messages etc..
+- The most common library is CypressJs will help for end to end testing.
