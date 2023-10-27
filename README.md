@@ -447,6 +447,7 @@ https://www.youtube.com/watch?v=T2sv8jXoP4s&list=PLC3y8-rFHvwirqe1KHFCHJ0RqNuN61
 
             import React from "react";
             import { render, screen } from "@testing-library/react";
+            import "@testing-library/jest-dom";
             import MyComponent from "../MyComponent"; // import your React library component
 
             test("it renders correctly", () => {
@@ -473,16 +474,46 @@ Test Workflow is as follows
 - Interact with those elements
 - Assert the results are as expected
 
-- Snapshot testing - https://jestjs.io/docs/snapshot-testing
+- Basic testing -
 
             import { render, screen } from "@testing-library/react";
+            import "@testing-library/jest-dom";
             import App from "../App";
 
             test('initial screen check list', () => { //description of test
             render(<App/>); // render the test component
             const header = screen.getByText(/Taskify/i); // find the elements
             expect(header).toBeInTheDocument(); //jest-dom based assert the result
-            });
+            }, 8); // timeout on max time we wait for test to execute
+
+### Jest Watch Mode
+
+- Watch mode is an option where we can pass to jest asking the watch files that have changed since last commit, and execute the tests related to those changes in files.
+- An optimisation on test runs.
+
+Usually with `create-react-app` it is default when run tests. If we use `Vite` we can do config in scripts in `package.json`.
+
+                   "scripts": {
+                        "testwatch": "jest --watch"
+                  },
+
+And run - `npm run testwatch`.
+
+### Test methods (continues)
+
+- Snapshot testing - https://jestjs.io/docs/snapshot-testing
+- Snapshot tests are a very useful tool whenever you want to make sure your UI does not change unexpectedly.
+- This helps us to validate the UI is not changed unexpectedly with our new changes, basically the components need protected UI design can be introduced in this test.
+- A typical snapshot test case renders a UI component, takes a snapshot, then compares it to a reference snapshot file stored alongside the test. The test will fail if the two snapshots do not match: either the change is unexpected, or the reference snapshot needs to be updated to the new version of the UI component.
+- If new version update is needed for snapshot it can be done with `jest watchmode`.
+
+**Usecase**
+
+- Instead of rendering the graphical UI, which would require building the entire app, you can use a test renderer to quickly generate a serializable value for your React tree.
+
+We tested our input component and it's features in our application as explained below.
+
+-
 
 ## Integration Testing
 
