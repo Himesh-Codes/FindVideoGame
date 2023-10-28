@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`input field UI changes validation 1`] = `
+<form
+  className="formContainer"
+  onSubmit={[Function]}
+>
+  <div
+    className="addTask"
+  >
+    <input
+      className="inputField"
+      onChange={[Function]}
+      placeholder="Enter the task"
+      type="text"
+      value=""
+    />
+    <button
+      className="addTaskBtn"
+      type="submit"
+    >
+      ADD
+    </button>
+  </div>
+</form>
+`;

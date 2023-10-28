@@ -499,6 +499,8 @@ Usually with `create-react-app` it is default when run tests. If we use `Vite` w
 
 And run - `npm run testwatch`.
 
+- If we do development by started a jest watch mode in terminal, on the development time itself we can catch the edge cases on test, and issue in our devoloping code.
+
 ### Test methods (continues)
 
 - Snapshot testing - https://jestjs.io/docs/snapshot-testing
@@ -513,7 +515,77 @@ And run - `npm run testwatch`.
 
 We tested our input component and it's features in our application as explained below.
 
--
+- Followed - https://jestjs.io/docs/tutorial-react#snapshot-testing, https://jestjs.io/docs/snapshot-testing
+- We need to install `renderer` to render the component to test. This will generate the renderable UI of the component.
+
+            npm i --save-dev react-test-renderer
+
+            npm i --save-dev @types/react-test-renderer
+
+            Install :   "@babel/preset-react": "^7.22.15",
+
+- Reference: test/InputSnap.test.tsx
+- Note ES6 import should done for react:
+
+            import * as renderer from 'react-test-renderer';
+
+- Once we created the test closure, create render component & expected snapshot match
+
+            it('input field UI changes validation', (){
+                  //render the component tree created
+                  const inputComponentTree = renderer.create(
+                        <InputField {...inputProps} />
+                  );
+                  // JSON converted tree
+                  const treeJsom = inputComponentTree.toJSON();
+                  //expect the snapshot comparison
+                  expect(treeJsom).toMatchSnapshot();
+            });
+
+- When you run jest test (npm run test), this will produce an output file like this - ref: `taskify/src/test/__snapshots__/InputSnap.test.tsx.snap`.
+- Next time when we run test it will compare the output previous snapshot with new snapshot created in new test, if comparison have difference, test will fails.
+- Thus the unexpected view changes can be validated,
+
+- What about we need to update UI?
+- Then we need to update the snapshot also, JEST provide command `npm test -- -u` and with jest `jest --updateSnapshot` or the jest watchmode have option to update failed snapshots `press i`.
+- Then it will update the snapshot with new UI changes.
+- Then redo the test to check with the updated UI.
+
+#### Jest react-test-renderer with props
+
+- If component have props with state we can enter the null value/ blank callback function.
+
+                const inputProps: TaskState = {task: "", setTask: ()=>{}, addTasks: ()=>{}};
+
+- And pass the props in the components.
+
+             const inputComponentTree = create(
+                  <InputField {...inputProps} />
+            ).toJSON();
+
+
+
+            //render the component tree created
+            const inputComponentTree = renderer.create(
+                  <InputField {...inputProps} />
+            );
+
+             //functional test with submit
+            renderer.act(() => {
+                  (treeJsom as renderer.ReactTestRendererJSON).props.onSubmit(); // Simulate the form submit
+            });
+
+- We use the mock function of JEST `jest.fn()` and passed in props of component submit.
+
+      const mockCallback = jest.fn();
+      const inputProps: TaskState = {task: "", setTask: ()=>{}, addTasks: mockCallback};
+
+- The render component again, and assert the expected call wit `expect(<mock function>).toHaveBeenCalledTimes()`.
+
+            // rerender the component
+            treeJsom = inputComponentTree.toJSON();
+            // Assert that the mock event object was called with the expected arguments
+            expect(mockCallback).toHaveBeenCalledTimes(1);
 
 ## Integration Testing
 

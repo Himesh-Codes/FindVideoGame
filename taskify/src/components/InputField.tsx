@@ -6,12 +6,12 @@ export default function InputField(inputProps: TaskState): React.JSX.Element{
     const inputFieldActive = useRef<HTMLInputElement>(null);
 
     return(
-        <div className="formContainer">
-            <form className="addTask" onSubmit={(event)=> HandleSubmit(inputProps, event, inputFieldActive)}>
+        <form className="formContainer" onSubmit={(event)=> HandleSubmit(inputProps, event, inputFieldActive)}>
+            <div className="addTask">
                 <input ref={inputFieldActive} type="text" placeholder="Enter the task" value={inputProps.task} onChange={(event)=> inputProps.setTask(event.target.value)} className="inputField"/>
                 <button className="addTaskBtn" type="submit">ADD</button>
-            </form>
-        </div>
+            </div>
+        </form>
     );
 }
 
