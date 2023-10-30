@@ -3,6 +3,14 @@
     cursor: pointer;
 }
 
+.formEdit{
+    display: flex;
+}
+
+.taskNameEdit{
+    max-width: 40%;
+}
+
 .taskCard{
     display: flex;
     width: 25%;
@@ -44,6 +52,7 @@
     scale: 1.5;
     animation: tilt-shaking 0.5s;
     animation-iteration-count: var(1s);
+    cursor: pointer;
 }
 
 .newTaskCard{

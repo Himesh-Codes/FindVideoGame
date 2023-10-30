@@ -156,6 +156,23 @@ create, delete, update tasks
 
 - We can add some state from parent and pass it to the child, and read some data from it.
 
+### React Conditional Rendering
+
+- We use terniary operatot (<ifcase> ? <thisone> : <otherone>). Eg:
+
+            <span className='taskName'>{task.taskName}</span>
+                  {
+                        task.isDone ? (
+                              <span className='taskIcon'  onClick={()=>handleDone(taskList, task.id)}><MdOutlineDownloadDone /></span>
+                        ) : (
+                              <>
+                              <span className='taskIcon'><GrEdit /></span>
+                              <span className='taskIcon' onClick={()=>handleDelete(taskList, task.id)}><RiDeleteBin5Line /></span>
+                              <span className='taskIcon'  onClick={()=>handleDone(taskList, task.id)}><MdOutlineDownloadDone /></span>
+                              </>
+                        )
+                  }
+
 ### Responding to Events
 
 - To add an event handler, you will first define a function and then pass it as a prop to the appropriate JSX tag.
@@ -192,6 +209,16 @@ create, delete, update tasks
       inputFieldActive.current?.blur();
 
       Since the `ref` is an HTMLInputElement, we have access to properties on DOM attributes (https://react.dev/learn/manipulating-the-dom-with-refs).
+
+- In the `TaskCard.tsx` we used `useRef` hook to focus in the edit input field & `useEffect` to the edit click response.
+
+              // edit field focus-in
+            const focusInput = useRef<HTMLInputElement>(null);
+
+            //effect hook listen to the edit flag and responds
+            useEffect(()=>{
+                  focusInput.current?.focus(); // focus on input
+            }, [isEdit]);
 
 ## Rendering Lists (state Lists)
 
@@ -335,6 +362,7 @@ We used useEffect here to identify new taskCard with useEffect on mount and remo
 
 ## Reducer Functionality (useReducer)
 
+- https://www.youtube.com/watch?v=rgp_iCVS8ys
 -
 
 ## React Icons
