@@ -363,7 +363,80 @@ We used useEffect here to identify new taskCard with useEffect on mount and remo
 ## Reducer Functionality (useReducer)
 
 - https://www.youtube.com/watch?v=rgp_iCVS8ys
--
+- Reducer is the methtod of reducing the complexity with states operations, simply reducer have a state object with lot of properties and values, and a reducer function that takes in the state object along with an action we can do with that state object.
+- Reducer is kept outside of a component. And based on the reducer function action we do some operations on maded copy state and return the copy of the state,and then overwrite and make new state.
+- Thus state is having a concept `Immutability` - we are not mutating data directly in a state, we create copy of state and do operation on it and after return it to main component, it overwrites in actual state with `useReducer`.
+
+- UseReducer keep all your logic in one easy-to-access place, you can move that state logic into a single function outside your component, called a “reducer”.
+
+- Reducers are a different way to handle state. You can migrate from useState to useReducer in three steps:
+
+  - **Move** from setting state to dispatching actions.
+  - **Write** a reducer function.
+  - **Use** the reducer from your component.
+
+### Usage of useReducer (in code)
+
+- We used it for the managing of `tasks` state operations. In file : `taskReducer.ts`.
+- The useReducer hooks take 3 arguments, first 2 are mandatory and 3rd one optional.
+
+      - 1st argument is the `reducer function` which perform the specific actions on the copy of state and return it and going to the `state` variable of useReducer hook in the code below.
+      - 2nd argument is the `initial value of state`, but only difference is it is mandatory to give intial value.
+
+            // can give any name to reducer function
+            // this function make copy of state and according to type of action will do some operation of copy state and return it
+            export function taskReducer(tasksState: Task[], action: TaskActions){
+            // decouple the dependency with action, destructuring assignment statement. It is used to extract the type property from the action
+            const {type} = action;
+            switch (type) {
+                  case 'add':
+
+                        break;
+
+                  case 'edit':
+
+                        break;
+
+                  case 'delete':
+
+                        break;
+
+                  case 'complete':
+
+                        break;
+
+                  default:
+                        break;
+            }
+
+            return tasksState;
+            }
+
+            const [taskState, dispatchTask] = useReducer(taskReducer, []);
+
+- To migrate from `useState` usage to `useReducer`, we did replace all the reference of that specific state to reducer-state. Here,`tasks` replaced with reducer state `tasksState` in `App.tsx`.
+- And migrate the reference of `React SetState function` | `React.Dispatch<React.SetStateAction<Task[]>>`, with our useReducer `dispatch function` | `React.Dispatch<TaskActions>`.
+- Applying changes to the state associated with the reducer (update, add, delete etc..), we need to unpack the state (`it will make copy of state`) and add the overriding properties. In our case task array we used as state.
+
+      case 'add':
+            // To push data in useReducer based array state in React, you can use the spread syntax.
+            // The spread syntax (...) will unpack the existing elements of the state array into a new array where you can add other elements.
+            return [...tasksState, {id: `${(action.action as AddTasksProp).recentTaskUid}`,taskName:(action.action as AddTasksProp).taskName}]
+
+- Here we unpacked the task state `tasksState` and added new item in an array and returned.
+- If in other case with , like example below,
+
+            interface State {
+                  count: number;
+                  error: string;
+            }
+
+- In case of add value / alter value in this, we need to do like this,
+
+            case 'increment':
+            // To push data in useReducer based array state in React, you can use the spread syntax.
+            // The spread syntax (...) will unpack the existing elements of the state array into a new array where you can add other elements.
+            return {...State, count: state.count + 1}
 
 ## React Icons
 

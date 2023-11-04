@@ -1,4 +1,5 @@
 import { FormEvent } from "react";
+import { TaskActions } from "./taskActionProps";
 
 export interface TaskState {
     task: string;
@@ -13,6 +14,6 @@ export interface Task {
 }
 
 export interface TaskListProp{
-    tasks: Task[];
-    pushStacks: React.Dispatch<React.SetStateAction<Task[]>>;
+    tasksState: Task[];
+    dispatchTask: React.Dispatch<TaskActions>;
 }

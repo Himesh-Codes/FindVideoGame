@@ -5,6 +5,7 @@ import { RiDeleteBin5Line } from 'react-icons/ri'
 import { Task, TaskListProp } from '../interfaces/task';
 import { useTaskContext } from './context/ApplicationContext';
 import { useEffect, useRef, useState } from 'react';
+import { CompleteTasksProp, DeleteTasksProp, EditTasksProp, TaskActions } from '../interfaces/taskActionProps';
 
 export default function TaskCard(task: Task): JSX.Element{
     // custom hook usage for edit and delete
@@ -74,11 +75,27 @@ export default function TaskCard(task: Task): JSX.Element{
 }
 
 function handleDelete(taskList: TaskListProp, taskId: string){
-    taskList.pushStacks(taskList.tasks.filter((task)=> task.id != taskId));
+    //useReducer dispatch usage replacing state
+    const deleteProp: DeleteTasksProp = {
+        taskId: taskId
+    }
+    const actionProp: TaskActions = {
+        type: 'delete',
+        action: deleteProp
+    }
+    taskList.dispatchTask(actionProp);
 }
 
 function handleDone(taskList: TaskListProp, taskId: string, setIsEdit : React.Dispatch<React.SetStateAction<boolean>>){
-    taskList.pushStacks(taskList.tasks.map(task => (task.id === taskId)? { id:task.id, taskName: task.taskName, isDone: !task.isDone} : task));
+    //useReducer dispatch usage replacing state
+    const completeProp: CompleteTasksProp = {
+        taskId
+    }
+    const actionProp: TaskActions = {
+        type: 'complete',
+        action: completeProp
+    }
+    taskList.dispatchTask(actionProp);
     setIsEdit(false);
 }
 
@@ -87,9 +104,18 @@ function handleEdit(isEdit: boolean, setIsEdit : React.Dispatch<React.SetStateAc
 }
 
 function updateTask(event: React.FormEvent<HTMLFormElement>, taskList: TaskListProp, taskId: string, editContent: string, setIsEdit : React.Dispatch<React.SetStateAction<boolean>>){
+    //useReducer dispatch usage replacing state
+    const editProp: EditTasksProp = {
+        taskId,
+        editContent
+    }
+    const actionProp: TaskActions = {
+        type: 'edit',
+        action: editProp
+    }
     // prevent the page refresh
     event.preventDefault();
-    taskList.pushStacks(taskList.tasks.map(task => (task.id === taskId)? { id:task.id, taskName: editContent, isDone: task.isDone} : task));
+    taskList.dispatchTask(actionProp)
     // edit functionality UI swapped
     setIsEdit(false);
 }
